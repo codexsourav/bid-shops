@@ -1,18 +1,23 @@
 import apiRequest, { apiUrl, uploadFileRequest } from 'lib/makeApi';
 import { errorToast, showAsyncToast, showAsyncToastError, showAsyncToastSuccess, successToast } from 'lib/showToast';
-import { useState } from 'react';
-import { Form, Row, Col, Button, InputGroup, Stack, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Form, Row, Col, Button, InputGroup, Stack, OverlayTrigger, Spinner } from 'react-bootstrap';
 import Rating from "react-rating";
 import Image from 'next/image';
+import { useRouter } from 'next/router';
+import makeApi from 'lib/makeApi';
+import { setDateInpValue, setTimeInpValue } from 'lib/getVewDate';
 
 
-function AddBid() {
+function UpdateBid() {
+    const router = useRouter()
     const [content, setContent] = useState({
         "title": "",
         "hintPrice": "",
         "image": "",
         "minPrice": "",
         "rating": 1,
+        "desc": ""
     })
 
     const [timeStamp, setTimeStamp] = useState({
@@ -22,6 +27,34 @@ function AddBid() {
         "endTime": "",
     })
 
+    useEffect(() => {
+        if (router.query.id) {
+            makeApi("/api/bid/" + router.query.id, "GET").then((data) => {
+                setContent({
+                    "title": data.title,
+                    "hintPrice": data.hintPrice,
+                    "minPrice": data.minPrice,
+                    "image": data.image,
+                    "desc": data.desc,
+                    "inStock": data.inStock,
+                    "rating": data.rating,
+                });
+
+                setTimeStamp({
+                    "startDate": setDateInpValue(data.startDate),
+                    "startTime": setTimeInpValue(data.startDate),
+                    "endDate": setDateInpValue(data.endDate),
+                    "endTime": setTimeInpValue(data.endDate),
+                });
+                console.log(timeStamp);
+            }).catch((e) => {
+                console.log(e);
+                errorToast("Data Load Field!")
+            })
+        }
+
+
+    }, [router])
 
     const uploadAfile = async (e) => {
         const file = e.target.files[0];
@@ -48,7 +81,7 @@ function AddBid() {
 
     const constructDateTime = () => {
         const { startDate, startTime, endDate, endTime } = timeStamp;
-
+        console.log({ startDate, startTime, endDate, endTime });
         if (startDate && startTime && endDate && endTime) {
             const [year, month, day] = startDate.split('-').map(Number);
             const [hour, minute] = startTime.split(':').map(Number);
@@ -82,23 +115,17 @@ function AddBid() {
 
     const submitForm = async () => {
         if (validateFields()) {
-            const id = showAsyncToast("Adding New Bid");
+            const id = showAsyncToast("Updating Bid");
             try {
                 const dates = constructDateTime();
-                const addResponse = await apiRequest("/api/bid", "POST", {
+                const addResponse = await apiRequest("/api/bid/" + router.query.id, "PATCH", {
                     ...content, startDate: dates.startDateTime, endDate: dates.endDateTime
                 });
                 if (addResponse.success == false) {
                     showAsyncToastError(id, addResponse.error || addResponse.message || "Something Want Wrong...");
                 } else {
-                    setContent({
-                        "title": "",
-                        "hintPrice": "",
-                        "image": "",
-                        "minPrice": "",
-                        "rating": 1,
-                    })
-                    showAsyncToastSuccess(id, addResponse.message || "Bid Successfully Added");
+
+                    showAsyncToastSuccess(id, addResponse.message || "Bid Successfully Update");
                 }
             } catch (error) {
                 showAsyncToastError(id, error.response?.data.error || error.toString() || "Something Want Wrong...");
@@ -108,9 +135,18 @@ function AddBid() {
         }
     }
 
+    if (content.title == "") {
+        return <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "Center", alignItems: "center" }}>
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    }
+
+
     return (
         <div className="container">
-            <h1 className="m-5">Add New Bid</h1>
+            <h1 className="m-5">Update Bid</h1>
             <Form onSubmit={(e) => e.preventDefault()}>
                 <Form.Group className="mb-3" >
                     <Form.Label>Product Image </Form.Label>
@@ -184,7 +220,7 @@ function AddBid() {
 
                 </Form.Group>
                 <div className="d-grid gap-2 mt-5 mb-5">
-                    <Button variant="primary" onClick={submitForm}>Publish New Bid</Button>
+                    <Button variant="primary" onClick={submitForm}>Update Bid</Button>
                 </div>
             </Form>
 
@@ -192,4 +228,4 @@ function AddBid() {
         </div>
     )
 }
-export default AddBid
+export default UpdateBid

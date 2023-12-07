@@ -1,10 +1,12 @@
 import axios from "axios";
 import { getStorage } from "./storage";
 
-export default async (path = "/", method = "GET", data = null) => {
+export const apiUrl = "http://localhost:8000";
+
+export default async (path = "/", method = "GET", data = {}) => {
     var options = {
         method: method,
-        url: 'http://localhost:8000' + path,
+        url: apiUrl + path,
         headers: {
             Accept: '*/*',
             Authorization: 'barer ' + (getStorage("auth") || "").toString(),
@@ -20,3 +22,25 @@ export default async (path = "/", method = "GET", data = null) => {
         throw error;
     }
 }
+
+export const uploadFileRequest = async (file) => {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    const options = {
+        method: 'POST',
+        url: apiUrl + '/upload',
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: 'Bearer ' + (getStorage("auth") || "").toString(),
+        },
+        data: formData,
+    };
+
+    try {
+        const response = await axios.request(options);
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};

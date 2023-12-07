@@ -1,11 +1,15 @@
 import apiRequest, { apiUrl, uploadFileRequest } from 'lib/makeApi';
 import { errorToast, showAsyncToast, showAsyncToastError, showAsyncToastSuccess, successToast } from 'lib/showToast';
-import { useState } from 'react';
-import { Form, Row, Col, Button, InputGroup, Stack, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { useEffect, useState } from 'react';
+import { Form, Row, Col, Button, InputGroup, Stack, OverlayTrigger, Tooltip, Spinner } from 'react-bootstrap';
 import Rating from "react-rating";
 import Image from 'next/image';
+import { useRouter } from 'next/router'
+import makeApi from 'lib/makeApi';
 
 function AddProduct() {
+    const router = useRouter()
+
 
     const [content, setContent] = useState({
         "title": "",
@@ -22,20 +26,32 @@ function AddProduct() {
         value: ""
     }]);
 
+    useEffect(() => {
+        if (router.query.id) {
+            makeApi("/api/product/" + router.query.id, "GET").then((data) => {
+                setContent({
+                    "title": data.title,
+                    "hintPrice": data.hintPrice,
+                    "price": data.price,
+                    "image": data.image,
+                    "description": data.description,
+                    "inStock": data.inStock,
+                    "rating": data.rating,
+                });
+                setgallery(data.gallery || []);
+                setSpecs(data.specs || [{
+                    title: "",
+                    value: ""
+                }]);
+            }).catch((e) => {
+                errorToast("Data Load Field!")
+            })
+        }
 
-    const clearAll = () => {
-        setContent({
-            "title": "",
-            "hintPrice": "",
-            "price": "",
-            "image": "",
-            "description": "",
-            "inStock": true,
-            "rating": 1,
-        });
-        setgallery([]);
-        setSpecs([{ title: "", value: "" }]);
-    };
+
+    }, [router])
+
+
 
 
     const addSpacs = () => {
@@ -86,6 +102,7 @@ function AddProduct() {
         } catch (error) {
             showAsyncToastError(id, error.response?.data.error || error.toString());
         }
+
     }
 
     const removeImageByIndex = (indexToRemove) => {
@@ -102,8 +119,8 @@ function AddProduct() {
     const validateContent = (content) => {
         return (
             content.title.trim() !== "" &&
-            content.hintPrice.trim() !== "" &&
-            content.price.trim() !== "" &&
+            content.hintPrice !== "" &&
+            content.price !== "" &&
             content.image.trim() !== "" &&
             content.description.trim() !== ""
             // You can add more specific validations as needed
@@ -129,16 +146,16 @@ function AddProduct() {
 
     const submitForm = async () => {
         if (validateAll()) {
-            const id = showAsyncToast("Adding New Product");
+            const id = showAsyncToast("Updating Product");
             try {
 
-                const addResponse = await apiRequest("/api/product", "POST", {
+                const addResponse = await apiRequest("/api/product/" + router.query.id, "PATCH", {
                     ...content, gallery, specs
                 });
                 if (addResponse.success == false) {
                     showAsyncToastError(id, addResponse.error || addResponse.message || "Something Want Wrong...");
                 } else {
-                    clearAll();
+
                     showAsyncToastSuccess(id, addResponse.message)
                 }
             } catch (error) {
@@ -149,9 +166,19 @@ function AddProduct() {
         }
 
     }
+
+
+    if (content.title == "") {
+        return <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "Center", alignItems: "center" }}>
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    }
+
     return (
         <div className="container">
-            <h1 className='mt-3 mb-3' >Add New Product</h1>
+            <h1 className='mt-3 mb-3' >Update Product</h1>
 
             <Form>
                 <Form.Group className="mb-3" >
@@ -268,13 +295,14 @@ function AddProduct() {
                         type="switch"
                         id="custom-switch"
                         label="In Stock"
+                        value={content.inStock}
                         checked={content.inStock}
                         onClick={() => setContent({ ...content, "inStock": !content.inStock })}
                     />
 
                 </Form.Group>
                 <div className="d-grid gap-2 mt-5 mb-5">
-                    <Button variant="primary" onClick={submitForm} >Publish New Product</Button>
+                    <Button variant="primary" onClick={submitForm} >Update Product</Button>
                 </div>
             </Form>
         </div >

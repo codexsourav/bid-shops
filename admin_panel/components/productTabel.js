@@ -1,53 +1,27 @@
 // import node module libraries
 import Link from 'next/link';
-import { ProgressBar, Col, Row, Card, Table, Image, Dropdown, Spinner } from 'react-bootstrap';
+import { ProgressBar, Col, Row, Card, Table, Image } from 'react-bootstrap';
 
 // import required data files
 import ActiveProjectsData from "data/dashboard/ActiveProjectsData";
-import React, { useEffect, useState } from 'react';
-import makeApi, { apiUrl } from 'lib/makeApi';
-import { viewDate } from 'lib/getVewDate';
+import { apiUrl } from 'lib/makeApi';
 
-
-
-
-const Bids = () => {
-
-    const [data, setData] = useState(null)
-
-    const getBids = async () => {
-        const data = await makeApi("/api/bids", "GET");
-        setData(data)
-    }
-
-    useEffect(() => {
-        getBids();
-    }, [])
-
-    if (data == null) {
-        return <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "Center", alignItems: "center" }}>
-            <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-        </div>
-    }
-
+const ProductData = ({ data }) => {
     return (
         <Row className=" text-center">
             <Col md={12} xs={12}>
                 <Card>
                     <Card.Header className="bg-white  py-4">
-                        <h4 className="mb-0">All Bids</h4>
+                        <h4 className="mb-0">Our Products</h4>
                     </Card.Header>
                     <Table responsive className="text-nowrap mb-0">
                         <thead className="table-light">
                             <tr>
                                 <th>Product name</th>
-                                <th>Time Durations</th>
-                                <th>Unique Bid</th>
-                                <th>Bid User</th>
-                                <th>Total Bids</th>
-                                <th></th>
+                                <th>In Stock</th>
+                                <th>Total Orders</th>
+                                <th>Price</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -67,23 +41,13 @@ const Bids = () => {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="align-middle">{viewDate(item.startDate)} - {viewDate(item.endDate)}</td>
-                                        <td className="align-middle">{viewDate(item.endDate)}</td>
+                                        <td className="align-middle">{item.inStock ? "Yes" : "NO"}</td>
+                                        <td className="align-middle">No Integrate this</td>
                                         <td className="align-middle">
-                                            {/* <div className="avatar-group">
-                                                {item.members.map((avatar, avatarIndex) => {
-                                                    return (
-                                                        <span className="avatar avatar-sm" key={avatarIndex}>
-                                                            <Image alt="avatar" src={avatar.image} className="rounded-circle" />
-                                                        </span>
-                                                    )
-                                                })}
-
-                                            </div> */}
+                                            <span style={{ textDecorationLine: "line-through", fontSize: 12, color: "#ddd" }}> ₹{item.hintPrice}</span>   ₹{item.price}
                                         </td>
-                                        <td className="align-middle">{item.users.length} Bid</td>
                                         <td className="align-middle">
-                                            <Link href={"/admin/bids/update/" + item._id}>Update</Link>
+                                            <Link href={`/admin/products/update/${item._id}`}>Update</Link>
                                         </td>
                                     </tr>
                                 )
@@ -97,4 +61,4 @@ const Bids = () => {
     )
 }
 
-export default Bids
+export default ProductData
