@@ -1,8 +1,6 @@
 // ignore: file_names
 import 'dart:io';
-
 import 'package:dio/dio.dart' as dio;
-
 import '../Storage/Storage.dart';
 
 class ApiRequest {
@@ -15,7 +13,7 @@ class ApiRequest {
     this.method = "GET",
     this.path = "/",
     this.body,
-    this.endPoint = "http://192.168.199.88:8000",
+    this.endPoint = "http://43.205.94.12:8000",
   });
 
   Future<dio.Response> send() async {

@@ -48,11 +48,7 @@ class HomePage extends StatelessWidget {
               const SizedBox(width: 5),
               IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) {
-                        return ComingSoon();
-                      },
-                    ));
+                    NavigateMe.push(context, WishListRoute());
                   },
                   icon: const Icon(
                     Ionicons.heart_outline,

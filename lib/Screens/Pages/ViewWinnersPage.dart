@@ -5,9 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 @RoutePage()
-class ViewWinners extends StatelessWidget {
+class ViewWinners extends StatefulWidget {
   const ViewWinners({super.key});
 
+  @override
+  State<ViewWinners> createState() => _ViewWinnersState();
+}
+
+class _ViewWinnersState extends State<ViewWinners> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -6,44 +6,11 @@ import { MoreVertical } from 'react-feather';
 
 // import required data files
 import TeamsData from "data/dashboard/TeamsData";
+import { apiUrl } from "lib/makeApi";
+import { viewDate } from "lib/getVewDate";
 
-const Teams = () => {
+const Teams = ({ data }) => {
 
-    const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-        (<Link
-            href=""
-            ref={ref}
-            onClick={(e) => {
-                e.preventDefault();
-                onClick(e);
-            }}
-            className="text-muted text-primary-hover">
-            {children}
-        </Link>)
-    ));
-
-    CustomToggle.displayName = 'CustomToggle';
-
-    const ActionMenu = () => {
-        return (
-            <Dropdown>
-                <Dropdown.Toggle as={CustomToggle}>
-                    <MoreVertical size="15px" className="text-muted" />
-                </Dropdown.Toggle>
-                <Dropdown.Menu align={'end'}>
-                    <Dropdown.Item eventKey="1">
-                        Action
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="2">
-                        Another action
-                    </Dropdown.Item>
-                    <Dropdown.Item eventKey="3">
-                        Something else here
-                    </Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        );
-    };
 
     return (
         <Card className="h-100">
@@ -56,18 +23,18 @@ const Teams = () => {
                         <th>Name</th>
                         <th>Status</th>
                         <th>Email Verified</th>
-                        <th>Last Activity</th>
-                        <th></th>
+                        <th>Attempt Bid</th>
+                        <th>Join Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {TeamsData.map((item, index) => {
+                    {data.map((item, index) => {
                         return (
                             <tr key={index}>
                                 <td className="align-middle">
                                     <div className="d-flex align-items-center">
                                         <div>
-                                            <Image src={item.image} alt="" className="avatar-md avatar rounded-circle" />
+                                            <Image src={apiUrl + "/" + item.profile} alt="" className="avatar-md avatar rounded-circle" />
                                         </div>
                                         <div className="ms-3 lh-1">
                                             <h5 className=" mb-1">{item.name}</h5>
@@ -75,12 +42,12 @@ const Teams = () => {
                                         </div>
                                     </div>
                                 </td>
-                                <td className="align-middle">Active</td>
-                                <td className="align-middle">NO</td>
-                                <td className="align-middle">{item.lastActivity}</td>
-                                <td className="align-middle">
-                                    <ActionMenu />
-                                </td>
+                                <td className="align-middle">{item.isAllow ? "Active" : "Suspend"}</td>
+                                <td className="align-middle">{item.isEmailVerify ? "Yes" : "NO"}</td>
+                                <td className="align-middle">{item.bids.length} BID</td>
+
+                                <td className="align-middle">{viewDate(item.date, true)}</td>
+
                             </tr>
                         )
                     })}

@@ -1,14 +1,35 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:bid_and_shops/Components/HomeComponents/Progress.dart';
 import 'package:bid_and_shops/Components/Products/BidProductBox.dart';
 import 'package:bid_and_shops/Helper/Navigate/NavigateMe.dart';
+import 'package:bid_and_shops/Manager/Themes/colors/AppColors.dart';
+import 'package:bid_and_shops/Manager/routes/AppRoutes.gr.dart';
+import 'package:bid_and_shops/Provider/CartProvider.dart';
+import 'package:bid_and_shops/Provider/ManageBidsProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
-import '../../Components/Products/ShopProductBox.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
-class BidShop extends StatelessWidget {
+class BidShop extends StatefulWidget {
   const BidShop({super.key});
+
+  @override
+  State<BidShop> createState() => _BidShopState();
+}
+
+class _BidShopState extends State<BidShop> {
+  late ManageBidProvider manageBidProvider;
+
+  @override
+  void initState() {
+    manageBidProvider = Provider.of<ManageBidProvider>(context, listen: false);
+    if (manageBidProvider.bidData == null ||
+        manageBidProvider.bidData!.isEmpty) {
+      manageBidProvider.loadBidData();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,54 +62,79 @@ class BidShop extends StatelessWidget {
           ],
         ),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              FontAwesomeIcons.cartShopping,
-              size: 18,
+          GestureDetector(
+            onTap: () {
+              NavigateMe.push(context, CartRoute());
+            },
+            child: Center(
+              child: Badge(
+                backgroundColor: AppColors.primaryColorDark,
+                label: Consumer<ManageCartList>(
+                  builder: (context, value, child) {
+                    return Text(
+                      value.cartData.length.toString(),
+                      // ignore: prefer_const_constructors
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    );
+                  },
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.only(right: 5),
+                  child: Icon(
+                    FontAwesomeIcons.shoppingCart,
+                    size: 18,
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(width: 15),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              BidProductBox(),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              ShopProductBox(),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-              SizedBox(height: 20),
-              BidProductBox(),
-              SizedBox(height: 20),
-            ],
-          ),
-        ),
+      body: Consumer<ManageBidProvider>(
+        builder: (context, value, child) {
+          List? bids = value.bidData;
+          return Builder(builder: (context) {
+            if (bids == null) {
+              return Center(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Center(child: progress(context)),
+                ),
+              );
+            } else if (bids.isEmpty) {
+              return Center(
+                child: SizedBox(
+                  height: MediaQuery.of(context).size.height / 2,
+                  child: Text("No Bids Live"),
+                ),
+              );
+            }
+            return RefreshIndicator(
+              onRefresh: () async {
+                await manageBidProvider.loadBidData();
+              },
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: List.generate(
+                      bids.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 20),
+                        child: BidProductBox(data: bids[index]),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            );
+          });
+        },
       ),
     );
   }

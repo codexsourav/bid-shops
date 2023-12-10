@@ -5,34 +5,34 @@ import {
    Bullseye
 } from 'react-bootstrap-icons';
 
-export const ProjectsStats = [
+export const ProjectsStats = (data) => [
    {
       id: 1,
       title: "Users",
-      value: 18,
+      value: data['user']['total'],
       icon: <People size={18} />,
-      statInfo: '<span className="text-dark me-2">10</span> Verified'
+      statInfo: '<span className="text-dark me-2">' + data['user']['verified'] + '</span> Verified'
    },
    {
       id: 2,
       title: "Active Products",
-      value: 132,
+      value: data['product']['total'],
       icon: <ListTask size={18} />,
-      statInfo: '<span className="text-dark me-2">28</span> Private'
+      statInfo: '<span className="text-dark me-2">' + data['product']['outOfStock'] + '</span> Out of Stock'
    },
    {
       id: 3,
       title: "Live Bids",
-      value: 12,
+      value: data['bid']['total'],
       icon: <Briefcase size={18} />,
-      statInfo: '<span className="text-dark me-2">1</span> Bid'
+      statInfo: '<span className="text-dark me-2">' + data['bid']['apply'] + '</span> Bid'
    },
    {
       id: 4,
       title: "Orders",
-      value: '76',
+      value: data['order']['total'],
       icon: <Bullseye size={18} />,
-      statInfo: '<span className="text-dark me-2">5</span> Cancel'
+      statInfo: '<span className="text-dark me-2">' + data['order']['cancel'] + '</span> Cancel'
    }
 ];
 export default ProjectsStats;

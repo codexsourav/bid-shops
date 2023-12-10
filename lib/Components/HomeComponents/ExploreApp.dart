@@ -40,7 +40,12 @@ class ExploreApp extends StatelessWidget {
                 onTap: () {
                   NavigateMe.push(context, ViewWinners());
                 }),
-            MenuIcons(title: "Cart", icon: Ionicons.cart_outline),
+            MenuIcons(
+                title: "Cart",
+                icon: Ionicons.cart_outline,
+                onTap: () {
+                  NavigateMe.push(context, CartRoute());
+                }),
             MenuIcons(title: "Orders", icon: Ionicons.cube_outline),
           ],
         ),

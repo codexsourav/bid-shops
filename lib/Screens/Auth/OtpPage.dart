@@ -71,7 +71,7 @@ class _OtpPageState extends State<OtpPage> {
       });
       Response response = await verifyotpRequest.send();
       Map data = response.data;
-
+      print(data);
       if (data['success'] == false) {
         // ignore: use_build_context_synchronously
         ShowSnackBar(

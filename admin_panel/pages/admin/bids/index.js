@@ -16,8 +16,12 @@ const Bids = () => {
     const [data, setData] = useState(null)
 
     const getBids = async () => {
-        const data = await makeApi("/api/bids", "GET");
-        setData(data)
+        try {
+            const data = await makeApi("/api/allbids", "GET");
+            setData(data)
+        } catch (error) {
+            setData([])
+        }
     }
 
     useEffect(() => {
@@ -25,7 +29,7 @@ const Bids = () => {
     }, [])
 
     if (data == null) {
-        return <div style={{ width: "100%", height: "100vh", display: "flex", justifyContent: "Center", alignItems: "center" }}>
+        return <div style={{ width: "100%", height: "83vh", display: "flex", justifyContent: "Center", alignItems: "center" }}>
             <Spinner animation="border" role="status">
                 <span className="visually-hidden">Loading...</span>
             </Spinner>
@@ -45,7 +49,7 @@ const Bids = () => {
                                 <th>Product name</th>
                                 <th>Time Durations</th>
                                 <th>Unique Bid</th>
-                                <th>Bid User</th>
+                                <th>Bid Winner</th>
                                 <th>Total Bids</th>
                                 <th></th>
                             </tr>
@@ -68,20 +72,17 @@ const Bids = () => {
                                             </div>
                                         </td>
                                         <td className="align-middle">{viewDate(item.startDate)} - {viewDate(item.endDate)}</td>
-                                        <td className="align-middle">{viewDate(item.endDate)}</td>
+                                        <td className="align-middle">{item.winData.amountData.amount} RS</td>
                                         <td className="align-middle">
-                                            {/* <div className="avatar-group">
-                                                {item.members.map((avatar, avatarIndex) => {
-                                                    return (
-                                                        <span className="avatar avatar-sm" key={avatarIndex}>
-                                                            <Image alt="avatar" src={avatar.image} className="rounded-circle" />
-                                                        </span>
-                                                    )
-                                                })}
+                                            <div className="avatar-group">
 
-                                            </div> */}
+                                                <span className="avatar avatar-sm" >
+                                                    <Image alt="avatar" src={apiUrl + "/" + item.winData.profile.profile} className="rounded-circle" />
+                                                </span>
+
+                                            </div>
                                         </td>
-                                        <td className="align-middle">{item.users.length} Bid</td>
+                                        <td className="align-middle"><Link href={"/admin/bids/users/" + item._id}>{item.users.length} Bid</Link></td>
                                         <td className="align-middle">
                                             <Link href={"/admin/bids/update/" + item._id}>Update</Link>
                                         </td>

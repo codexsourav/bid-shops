@@ -195,7 +195,7 @@ function AddProduct() {
                         <Row>
                             {
                                 gallery.map((e, i) => {
-                                    return <Col md={1}>
+                                    return <Col md={1} key={"image-" + i}>
                                         <OverlayTrigger
                                             key={"placement-" + i}
                                             overlay={

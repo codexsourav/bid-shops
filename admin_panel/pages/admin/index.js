@@ -1,19 +1,39 @@
 // import node module libraries
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Link from 'next/link';
-import { Container, Col, Row } from 'react-bootstrap';
+import { Container, Col, Row, Spinner } from 'react-bootstrap';
 
-// import widget/custom components
 import { StatRightTopIcon } from "widgets";
 
-// import sub components
 import { ActiveProjects, Teams, TasksPerformance } from "sub-components";
 
-// import required data files
 import ProjectsStatsData from "data/dashboard/ProjectsStatsData";
 import OrdersList from "sub-components/dashboard/OrdersList";
+import makeApi from "lib/makeApi";
+import { errorToast } from "lib/showToast";
 
 const Home = () => {
+
+    const [data, setData] = useState(null)
+
+    useEffect(() => {
+        makeApi("/api/admin/dashbord").then((data) => {
+            setData(data);
+        }).catch((e) => {
+            console.log(e);
+            errorToast(e.toString());
+        })
+    }, [],)
+
+    if (data == null) {
+        return <div style={{ width: "100%", height: "83vh", display: "flex", justifyContent: "Center", alignItems: "center" }}>
+            <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+        </div>
+    }
+
+
     return (
         <Fragment>
             <div className="bg-primary pt-10 pb-21"></div>
@@ -32,7 +52,7 @@ const Home = () => {
                             </div>
                         </div>
                     </Col>
-                    {ProjectsStatsData.map((item, index) => {
+                    {ProjectsStatsData(data['count']).map((item, index) => {
                         return (
                             <Col xl={3} lg={6} md={12} xs={12} className="mt-6" key={index}>
                                 <StatRightTopIcon info={item} />
@@ -42,13 +62,13 @@ const Home = () => {
                 </Row>
 
                 {/* Active Projects  */}
-                <ActiveProjects />
+                <ActiveProjects data={data['activeBids']} />
                 <OrdersList />
 
                 <br />
 
                 {/* Teams  */}
-                <Teams />
+                <Teams data={data['users']} />
 
 
 

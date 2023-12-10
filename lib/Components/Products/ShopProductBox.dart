@@ -1,21 +1,26 @@
 import 'package:bid_and_shops/Components/simmer/imageLoader.dart';
 import 'package:bid_and_shops/Helper/Navigate/NavigateMe.dart';
 import 'package:bid_and_shops/Manager/routes/AppRoutes.gr.dart';
-import 'package:bid_and_shops/Screens/ComingSoon.dart';
+import 'package:bid_and_shops/Provider/WishListProvider.dart';
+import 'package:bid_and_shops/Services/Api/ApiRequest.dart';
+import 'package:bid_and_shops/Utils/getDiscount.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class ShopProductBox extends StatelessWidget {
+  final Map data;
   const ShopProductBox({
     super.key,
+    required this.data,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        NavigateMe.push(context, ProductLandingRoute());
+        NavigateMe.push(context, ProductLandingRoute(data: data));
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -26,25 +31,36 @@ class ShopProductBox extends StatelessWidget {
               ImageLoader(
                 width: MediaQuery.of(context).size.width / 2 - 60,
                 height: 160,
-                imageUrl:
-                    "https://media.wired.com/photos/6332360740fe1e8870aa3bc0/master/pass/iPhone-14-Review-Gear.jpg",
+                imageUrl: "${ApiRequest().endPoint}/" + data['image'],
               ),
               Positioned(
                 bottom: 8,
                 right: 8,
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(50),
-                    color: Colors.white,
-                  ),
-                  child: Icon(
-                    FontAwesomeIcons.solidHeart,
-                    color: Color.fromARGB(255, 221, 216, 216),
-                    size: 15,
-                  ),
-                ),
+                child:
+                    Consumer<ManageWishList>(builder: (context, value, child) {
+                  return GestureDetector(
+                    onTap: () async {
+                      await value.addToWishList(data['_id']);
+                    },
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(50),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Color.fromARGB(255, 41, 41, 41)
+                            : Color.fromARGB(255, 236, 235, 235),
+                      ),
+                      child: Icon(
+                        FontAwesomeIcons.solidHeart,
+                        color: !value.wishlistData.contains(data['_id'])
+                            ? Color.fromARGB(255, 221, 216, 216)
+                            : Colors.pink,
+                        size: 15,
+                      ),
+                    ),
+                  );
+                }),
               ),
               Align(
                 alignment: Alignment.topRight,
@@ -52,11 +68,11 @@ class ShopProductBox extends StatelessWidget {
                   margin: const EdgeInsets.all(5),
                   height: 20,
                   color: Colors.red,
-                  child: const Center(
+                  child: Center(
                     child: Padding(
                       padding: EdgeInsets.symmetric(horizontal: 5),
                       child: Text(
-                        "10% OFF",
+                        "${getParcent(data['hintPrice'], data['price'])}% OFF",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 10,
@@ -76,8 +92,8 @@ class ShopProductBox extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "I Phone 14 Pro Max 120 GB",
+                Text(
+                  data['title'],
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -89,7 +105,7 @@ class ShopProductBox extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: RatingBarIndicator(
-                    rating: 2.75,
+                    rating: data['rating'].toDouble(),
                     itemBuilder: (context, index) => const Icon(
                       Icons.star,
                       color: Colors.amber,
@@ -100,8 +116,8 @@ class ShopProductBox extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an",
+                Text(
+                  data['description'],
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(
@@ -109,8 +125,8 @@ class ShopProductBox extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 5),
-                const Text(
-                  "₹ 12999.00",
+                Text(
+                  "₹ ${data['hintPrice'].toDouble()}",
                   style: TextStyle(
                     color: Color.fromARGB(255, 196, 196, 196),
                     decoration: TextDecoration.lineThrough,
@@ -130,7 +146,7 @@ class ShopProductBox extends StatelessWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       TextSpan(
-                        text: '1200.00',
+                        text: data['price'].toDouble().toString(),
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
@@ -145,7 +161,6 @@ class ShopProductBox extends StatelessWidget {
           ),
         ],
       ),
-   
     );
   }
 }

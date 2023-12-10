@@ -1,7 +1,10 @@
 import 'package:bid_and_shops/Manager/Themes/DarkTheme.dart';
 import 'package:bid_and_shops/Manager/Themes/LightTheme.dart';
 import 'package:bid_and_shops/Manager/routes/AppRoutes.dart';
+import 'package:bid_and_shops/Provider/CartProvider.dart';
+import 'package:bid_and_shops/Provider/ManageBidsProvider.dart';
 import 'package:bid_and_shops/Provider/UserProfileProvider.dart';
+import 'package:bid_and_shops/Provider/WishListProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +19,9 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => UserProfileProvider()),
+        ChangeNotifierProvider(create: (_) => ManageWishList()),
+        ChangeNotifierProvider(create: (_) => ManageCartList()),
+        ChangeNotifierProvider(create: (_) => ManageBidProvider()),
       ],
       child: MyApp(),
     ),

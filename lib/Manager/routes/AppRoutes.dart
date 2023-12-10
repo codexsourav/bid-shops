@@ -27,7 +27,7 @@ class AppRouters extends $AppRouters {
           guards: [AuthGuard()],
         ),
         AutoRoute(
-          page: BidExploreSection.page,
+          page: ShowBidsRoutee.page,
           path: "/bidexploreshop",
           guards: [AuthGuard()],
         ),
@@ -39,6 +39,11 @@ class AppRouters extends $AppRouters {
         AutoRoute(
           page: CartRoute.page,
           path: "/cart",
+          guards: [AuthGuard()],
+        ),
+        AutoRoute(
+          page: SearchRoute.page,
+          path: "/search",
           guards: [AuthGuard()],
         ),
         AutoRoute(
@@ -54,6 +59,11 @@ class AppRouters extends $AppRouters {
         AutoRoute(
           page: RaferRoute.page,
           path: "/refer",
+          guards: [AuthGuard()],
+        ),
+        AutoRoute(
+          page: WishListRoute.page,
+          path: "/wishlist",
           guards: [AuthGuard()],
         ),
       ];

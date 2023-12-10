@@ -9,13 +9,14 @@ class ImageLoader extends StatelessWidget {
   final String? imageUrl;
   final BoxFit? fit;
 
-  const ImageLoader(
-      {super.key,
-      this.height = 50,
-      this.width = 50,
-      this.imageUrl,
-      this.fit,
-      this.radius = 0});
+  const ImageLoader({
+    super.key,
+    this.height = 50,
+    this.width = 50,
+    this.imageUrl,
+    this.fit,
+    this.radius = 0,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,7 @@ class ImageLoader extends StatelessWidget {
             child: Icon(
               Icons.info,
               color: Colors.white,
-              size: (width / 2),
+              size: (width / 4),
             ),
           );
         },

@@ -19,7 +19,11 @@ class SpecsList extends StatelessWidget {
           children: [
             TextSpan(
               text: '$title : ',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.titleSmall?.color,
+              ),
             ),
             TextSpan(
               text: '$value',

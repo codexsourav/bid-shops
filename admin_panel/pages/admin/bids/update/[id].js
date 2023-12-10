@@ -46,7 +46,7 @@ function UpdateBid() {
                     "endDate": setDateInpValue(data.endDate),
                     "endTime": setTimeInpValue(data.endDate),
                 });
-                console.log(timeStamp);
+
             }).catch((e) => {
                 console.log(e);
                 errorToast("Data Load Field!")
@@ -81,7 +81,7 @@ function UpdateBid() {
 
     const constructDateTime = () => {
         const { startDate, startTime, endDate, endTime } = timeStamp;
-        console.log({ startDate, startTime, endDate, endTime });
+
         if (startDate && startTime && endDate && endTime) {
             const [year, month, day] = startDate.split('-').map(Number);
             const [hour, minute] = startTime.split(':').map(Number);
@@ -98,8 +98,6 @@ function UpdateBid() {
     };
 
     const validateFields = () => {
-        console.log(content);
-        console.log(timeStamp);
         const contentFields = Object.values(content);
         const timeStampFields = Object.values(timeStamp);
         if (

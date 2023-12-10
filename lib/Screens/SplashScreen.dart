@@ -1,10 +1,15 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:bid_and_shops/Helper/Navigate/NavigateMe.dart';
 import 'package:bid_and_shops/Manager/routes/AppRoutes.gr.dart';
+import 'package:bid_and_shops/Provider/UserProfileProvider.dart';
 import 'package:bid_and_shops/Services/Storage/Storage.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 @RoutePage()
 class SplashScreen extends StatefulWidget {
@@ -22,7 +27,21 @@ class _SplashScreenState extends State<SplashScreen> {
       if (jwt == null || jwt.isEmpty) {
         NavigateMe.replacePush(context, LoginRoute());
       } else {
-        NavigateMe.replacePush(context, HomeRoute());
+        try {
+          await SetUserProvider.setAppUserData(context);
+          NavigateMe.replacePush(context, HomeRoute());
+        } on DioException catch (e) {
+          if (e.response?.statusCode == 401) {
+            NavigateMe.replacePush(context, LoginRoute());
+          } else {
+            Fluttertoast.showToast(
+                msg: "Product Added To Your Cart",
+                toastLength: Toast.LENGTH_LONG,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                fontSize: 16.0);
+          }
+        }
       }
     }
   }

@@ -23,7 +23,40 @@ function MyApp({ Component, pageProps }) {
   const Layout = Component.Layout || (router.pathname.includes('dashboard') ?
     (router.pathname.includes('instructor') || router.pathname.includes('student') ?
       DefaultDashboardLayout : DefaultDashboardLayout) : DefaultDashboardLayout)
-
+  if (!router.route.startsWith('/admin')) {
+    return <SSRProvider>
+      <NextNProgress color="#624bff" startPosition={0.3} stopDelayMs={200} height={3} showOnShallow={true} />
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="keywords" content={keywords} />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+      </Head>
+      <NextSeo
+        title={title}
+        description={description}
+        canonical={pageURL}
+        openGraph={{
+          url: pageURL,
+          title: title,
+          description: description,
+          site_name: process.env.siteName
+        }}
+      />
+      <Component {...pageProps} />
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={true}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
+    </SSRProvider>
+  }
   return (
     <SSRProvider>
       <NextNProgress color="#624bff" startPosition={0.3} stopDelayMs={200} height={3} showOnShallow={true} />
