@@ -72,14 +72,16 @@ const Bids = () => {
                                             </div>
                                         </td>
                                         <td className="align-middle">{viewDate(item.startDate)} - {viewDate(item.endDate)}</td>
-                                        <td className="align-middle">{item.winData.amountData.amount} RS</td>
+                                        <td className="align-middle">{item.winData == null ? "No Winner" : item.winData.amountData.amount + " RS"}</td>
                                         <td className="align-middle">
                                             <div className="avatar-group">
-
-                                                <span className="avatar avatar-sm" >
-                                                    <Image alt="avatar" src={apiUrl + "/" + item.winData.profile.profile} className="rounded-circle" />
-                                                </span>
-
+                                                {
+                                                    item.winData == null ?
+                                                        <> No Winner</>
+                                                        : <span className="avatar avatar-sm" >
+                                                            <Image alt="avatar" src={apiUrl + "/" + item.winData.profile.profile} className="rounded-circle" />
+                                                        </span>
+                                                }
                                             </div>
                                         </td>
                                         <td className="align-middle"><Link href={"/admin/bids/users/" + item._id}>{item.users.length} Bid</Link></td>

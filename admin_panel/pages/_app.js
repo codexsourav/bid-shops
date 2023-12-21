@@ -2,7 +2,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
-import SSRProvider from 'react-bootstrap/SSRProvider';
+import { SSRProvider, Spinner } from 'react-bootstrap';
 import { Analytics } from '@vercel/analytics/react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,7 @@ import 'styles/theme.scss';
 import NextNProgress from 'nextjs-progressbar';
 // import default layouts
 import DefaultDashboardLayout from 'layouts/DefaultDashboardLayout';
+import checkAuth from 'lib/checkAuth';
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -19,6 +20,13 @@ function MyApp({ Component, pageProps }) {
   const description = "Dash is a fully responsive and yet modern premium Nextjs template & snippets. Geek is feature-rich Nextjs components and beautifully designed pages that help you create the best possible website and web application projects. Nextjs Snippet "
   const keywords = "Dash UI, Nextjs, Next.js, Course, Sass, landing, Marketing, admin themes, Nextjs admin, Nextjs dashboard, ui kit, web app, multipurpose"
 
+  if (!router.pathname.includes("login") && router.route.startsWith("/admin") && typeof window !== 'undefined') {
+    const isAuthenticated = checkAuth();
+    if (!isAuthenticated) {
+      window.location.replace("/admin/login");
+      return <></>
+    }
+  }
   // Identify the layout, which will be applied conditionally
   const Layout = Component.Layout || (router.pathname.includes('dashboard') ?
     (router.pathname.includes('instructor') || router.pathname.includes('student') ?

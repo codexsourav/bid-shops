@@ -107,19 +107,19 @@ class _ShopState extends State<Shop> {
         return SingleChildScrollView(
           child: Column(
             children: [
-              const SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: [
-                    SizedBox(width: 15),
-                    TabBar(title: "MOBILE"),
-                    TabBar(title: "HEADPHONS"),
-                    TabBar(title: "SPEKARS"),
-                    TabBar(title: "WATCH"),
-                    SizedBox(width: 15),
-                  ],
-                ),
-              ),
+              // const SingleChildScrollView(
+              //   scrollDirection: Axis.horizontal,
+              //   child: Row(
+              //     children: [
+              //       SizedBox(width: 15),
+              //       TabBar(title: "MOBILE"),
+              //       TabBar(title: "HEADPHONS"),
+              //       TabBar(title: "SPEKARS"),
+              //       TabBar(title: "WATCH"),
+              //       SizedBox(width: 15),
+              //     ],
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(

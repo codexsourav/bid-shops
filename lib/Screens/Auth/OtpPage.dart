@@ -230,6 +230,7 @@ class _OtpPageState extends State<OtpPage> {
                       child: isLoading
                           ? CircularProgressIndicator(
                               strokeWidth: 1,
+                              color: Colors.white,
                             )
                           : Text(
                               "Verify OTP",
@@ -289,6 +290,7 @@ class _OtpPageState extends State<OtpPage> {
 class OTPBOX extends StatelessWidget {
   final TextEditingController? controller;
   final bool autofocus;
+  final Color? color;
   final FocusNode? focusNode;
   final FocusNode? nextNode;
   final FocusNode? prevNode;
@@ -300,6 +302,7 @@ class OTPBOX extends StatelessWidget {
     this.focusNode,
     this.nextNode,
     this.prevNode,
+    this.color,
   });
 
   @override
@@ -307,14 +310,14 @@ class OTPBOX extends StatelessWidget {
     return SizedBox(
       width: MediaQuery.of(context).size.width / 4 - 35,
       child: TextField(
-        cursorColor: Colors.black,
+        cursorColor: color ?? Colors.black,
         controller: controller,
         autofocus: autofocus,
         focusNode: focusNode,
         keyboardType: TextInputType.number,
         maxLength: 1,
-        style:
-            const TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: color ?? Colors.black, fontWeight: FontWeight.bold),
         textAlign: TextAlign.center,
         onChanged: (value) {
           if (value.isNotEmpty) {

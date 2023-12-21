@@ -42,7 +42,7 @@ const ActiveProjects = ({ data }) => {
                                             </div>
                                         </td>
                                         <td className="align-middle">{viewDate(item.startDate)} - {viewDate(item.endDate)}</td>
-                                        <td className="align-middle">{item.winData == null ? "No One" : item.winData.amountData.amount} RS</td>
+                                        <td className="align-middle">{item.winData == null ? "No Winner" : item.winData.amountData.amount + " RS"}</td>
                                         <td className="align-middle">
                                             <div className="avatar-group">
                                                 {

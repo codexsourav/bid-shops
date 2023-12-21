@@ -25,6 +25,11 @@ function UpdateBid() {
         "startTime": "",
         "endDate": "",
         "endTime": "",
+    });
+
+    const [isSlide, setIsSlide] = useState({
+        "isSlide": false,
+        "slideImage": "",
     })
 
     useEffect(() => {
@@ -46,7 +51,10 @@ function UpdateBid() {
                     "endDate": setDateInpValue(data.endDate),
                     "endTime": setTimeInpValue(data.endDate),
                 });
-
+                setIsSlide({
+                    "isSlide": data.isSlide,
+                    "slideImage": data.slideImage,
+                });
             }).catch((e) => {
                 console.log(e);
                 errorToast("Data Load Field!")
@@ -56,13 +64,17 @@ function UpdateBid() {
 
     }, [router])
 
-    const uploadAfile = async (e) => {
+    const uploadAfile = async (e, forslide = false) => {
         const file = e.target.files[0];
         const id = showAsyncToast("Uploading...");
         try {
             const data = await uploadFileRequest(file);
 
-            setContent({ ...content, [e.target.name]: data.filename });
+            if (forslide) {
+                setIsSlide({ ...isSlide, "slideImage": data.filename })
+            } else {
+                setContent({ ...content, [e.target.name]: data.filename });
+            }
 
             showAsyncToastSuccess(id, "Image Uploaded");
         } catch (error) {
@@ -117,7 +129,7 @@ function UpdateBid() {
             try {
                 const dates = constructDateTime();
                 const addResponse = await apiRequest("/api/bid/" + router.query.id, "PATCH", {
-                    ...content, startDate: dates.startDateTime, endDate: dates.endDateTime
+                    ...content, ...isSlide, startDate: dates.startDateTime, endDate: dates.endDateTime
                 });
                 if (addResponse.success == false) {
                     showAsyncToastError(id, addResponse.error || addResponse.message || "Something Want Wrong...");
@@ -215,7 +227,22 @@ function UpdateBid() {
                             onChange={(v) => setContent({ ...content, "rating": v })}
                         />
                     </div>
-
+                    <br />
+                    <Form.Check // prettier-ignore
+                        type="switch"
+                        id="custom-switch"
+                        label="Add To App Slides"
+                        checked={isSlide.isSlide}
+                        onClick={(e) => setIsSlide({ isSlide: !isSlide.isSlide, slideImage: "" })}
+                    />
+                    <br />
+                    {isSlide.isSlide ? <Form.Group className="mb-3" >
+                        <Form.Label>Slide Image Image </Form.Label>
+                        <Form.Control type="file" name='image' onChange={(e) => uploadAfile(e, true)} />
+                        {isSlide.slideImage != "" ? <div className='m-2'>
+                            <Image src={`${apiUrl}/${isSlide.slideImage}`} width={60} height={60} alt={isSlide.slideImage} />
+                        </div> : null}
+                    </Form.Group> : null}
                 </Form.Group>
                 <div className="d-grid gap-2 mt-5 mb-5">
                     <Button variant="primary" onClick={submitForm}>Update Bid</Button>

@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'dart:io';
+import 'package:bid_and_shops/Helper/Navigate/NavigateMe.dart';
 import 'package:dio/dio.dart' as dio;
 import '../Storage/Storage.dart';
 
@@ -33,7 +34,7 @@ class ApiRequest {
     } on SocketException catch (e) {
       throw SocketException(e.toString());
     } on dio.DioException catch (e) {
-      if (e.response != null || e.response!.statusCode == 401) {
+      if (e.response != null && e.response!.statusCode == 401) {
         await UseLocalStorage(storage: localStorage).cleanStorage();
       }
       rethrow;

@@ -1,6 +1,8 @@
 import 'package:bid_and_shops/Helper/Navigate/NavigateMe.dart';
+import 'package:bid_and_shops/Helper/Navigate/Navigation.dart';
 import 'package:bid_and_shops/Manager/routes/AppRoutes.gr.dart';
 import 'package:bid_and_shops/Screens/ComingSoon.dart';
+import 'package:bid_and_shops/Screens/Order/myOrders/ViewOrders.dart';
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 
@@ -46,7 +48,12 @@ class ExploreApp extends StatelessWidget {
                 onTap: () {
                   NavigateMe.push(context, CartRoute());
                 }),
-            MenuIcons(title: "Orders", icon: Ionicons.cube_outline),
+            MenuIcons(
+                title: "Orders",
+                icon: Ionicons.cube_outline,
+                onTap: () {
+                  Navigation.push(context, page: ViewOrders());
+                }),
           ],
         ),
         SizedBox(height: 20),

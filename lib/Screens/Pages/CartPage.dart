@@ -2,9 +2,11 @@ import 'package:auto_route/auto_route.dart';
 import 'package:bid_and_shops/Components/Appbars/ProductAppbar.dart';
 import 'package:bid_and_shops/Components/simmer/imageLoader.dart';
 import 'package:bid_and_shops/Helper/Navigate/NavigateMe.dart';
+import 'package:bid_and_shops/Helper/Navigate/Navigation.dart';
 import 'package:bid_and_shops/Manager/Themes/colors/AppColors.dart';
 import 'package:bid_and_shops/Manager/routes/AppRoutes.gr.dart';
 import 'package:bid_and_shops/Provider/CartProvider.dart';
+import 'package:bid_and_shops/Screens/Order/AddressPage.dart';
 import 'package:bid_and_shops/Services/Api/ApiRequest.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +112,7 @@ class _CartPageState extends State<CartPage> {
                   child: Stack(
                     children: [
                       !products![index]['productDetails']['inStock']
-                          ? SizedBox(
+                          ? const SizedBox(
                               height: 100,
                               child: Center(
                                 child: Text(
@@ -122,7 +124,7 @@ class _CartPageState extends State<CartPage> {
                                 ),
                               ),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                       Opacity(
                         opacity: products![index]['productDetails']['inStock']
                             ? 1.0
@@ -305,7 +307,10 @@ class _CartPageState extends State<CartPage> {
                         color: Theme.of(context).brightness == Brightness.dark
                             ? Colors.white
                             : Colors.black,
-                        onTapUp: () => HapticFeedback.vibrate(),
+                        onTapUp: () {
+                          Navigation.push(context, page: const AddressPage());
+                          HapticFeedback.vibrate();
+                        },
                         onTapDown: () => HapticFeedback.vibrate(),
                         parentColor: Colors.transparent,
                         buttonPosition: Position.center,

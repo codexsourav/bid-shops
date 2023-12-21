@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getStorage } from "./storage";
 
-export const apiUrl = "http://localhost:8000";
+export const apiUrl = "http://43.205.94.12:8000";
 
 export default async (path = "/", method = "GET", data = {}) => {
     var options = {
@@ -19,6 +19,12 @@ export default async (path = "/", method = "GET", data = {}) => {
         const response = await axios.request(options);
         return response.data;
     } catch (error) {
+        if (error.response?.status == 401) {
+            if (typeof window !== "undefined") {
+                window.location.replace("/admin/login");
+                return false;
+            }
+        }
         throw error;
     }
 }

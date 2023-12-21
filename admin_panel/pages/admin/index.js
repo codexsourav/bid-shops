@@ -11,8 +11,12 @@ import ProjectsStatsData from "data/dashboard/ProjectsStatsData";
 import OrdersList from "sub-components/dashboard/OrdersList";
 import makeApi from "lib/makeApi";
 import { errorToast } from "lib/showToast";
+import checkAuth from "lib/checkAuth";
+import { useRouter } from "next/router";
 
 const Home = () => {
+
+
 
     const [data, setData] = useState(null)
 

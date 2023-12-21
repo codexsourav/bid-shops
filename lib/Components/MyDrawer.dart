@@ -1,7 +1,10 @@
 import 'package:bid_and_shops/Helper/Navigate/NavigateMe.dart';
+import 'package:bid_and_shops/Helper/Navigate/Navigation.dart';
 import 'package:bid_and_shops/Manager/routes/AppRoutes.gr.dart';
 import 'package:bid_and_shops/Provider/UserProfileProvider.dart';
 import 'package:bid_and_shops/Screens/ComingSoon.dart';
+import 'package:bid_and_shops/Screens/Order/myOrders/ViewOrders.dart';
+import 'package:bid_and_shops/Screens/Pages/ProfilePage.dart';
 import 'package:bid_and_shops/Services/Api/ApiRequest.dart';
 import 'package:bid_and_shops/Services/Storage/Storage.dart';
 import 'package:flutter/material.dart';
@@ -44,53 +47,78 @@ Drawer myDrawer(context) {
               ));
         }),
         DrowerItem(
-          icon: Icon(
+          icon: const Icon(
             Icons.how_to_vote_rounded,
           ),
-          text: "Top Bids",
+          onTap: () {
+            NavigateMe.push(context, const BidShop());
+          },
+          text: "New Bids",
         ),
+        // DrowerItem(
+        //   icon: Icon(
+        //     FontAwesomeIcons.tags,
+        //     size: 18,
+        //   ),
+        //   text: "Top Deals",
+        // ),
+        // DrowerItem(
+        //   icon: Icon(
+        //     Icons.currency_rupee,
+        //   ),
+        //   text: "My Subscription",
+        // ),
         DrowerItem(
-          icon: Icon(
-            FontAwesomeIcons.tags,
-            size: 18,
+          icon: const Icon(
+            Icons.shopping_basket_rounded,
           ),
-          text: "Top Deals",
-        ),
-        DrowerItem(
-          icon: Icon(
-            Icons.currency_rupee,
-          ),
-          text: "My Subscription",
+          text: "My Orders",
+          onTap: () {
+            Navigation.push(context, page: const ViewOrders());
+          },
         ),
         DrowerItem(
           onTap: () {
-            NavigateMe.push(context, WishListRoute());
+            NavigateMe.push(context, const WishListRoute());
           },
-          icon: Icon(
+          icon: const Icon(
             FontAwesomeIcons.solidHeart,
             size: 18,
           ),
           text: "Wishlists",
         ),
         DrowerItem(
-          icon: Icon(
-            FontAwesomeIcons.user,
+          onTap: () {
+            NavigateMe.push(context, const CartRoute());
+          },
+          icon: const Icon(
+            FontAwesomeIcons.cartShopping,
+            size: 18,
+          ),
+          text: "Cart",
+        ),
+        DrowerItem(
+          onTap: () {
+            Navigation.push(context, page: const ProfilePage());
+          },
+          icon: const Icon(
+            FontAwesomeIcons.userAlt,
             size: 18,
           ),
           text: "Account",
         ),
         DrowerItem(
           onTap: () {
-            NavigateMe.push(context, SettingsRoute());
+            NavigateMe.push(context, const SettingsRoute());
           },
-          icon: Icon(
+          icon: const Icon(
             FontAwesomeIcons.gear,
             size: 18,
           ),
           text: "Settings",
         ),
         DrowerItem(
-          icon: Icon(
+          icon: const Icon(
             FontAwesomeIcons.lock,
             size: 18,
           ),
@@ -103,7 +131,7 @@ Drawer myDrawer(context) {
             useLocalStorage.cleanStorage();
             NavigateMe.replacePush(context, LoginRoute());
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.exit_to_app_rounded,
           ),
           text: "Logout",
@@ -131,16 +159,16 @@ class DrowerItem extends StatelessWidget {
             ? onTap!()
             : Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ComingSoon(),
+                  builder: (context) => const ComingSoon(),
                 ),
               );
       },
       leading: icon,
       title: Text(
         "$text",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
       ),
-      trailing: Icon(
+      trailing: const Icon(
         Icons.keyboard_arrow_right_rounded,
       ),
     );

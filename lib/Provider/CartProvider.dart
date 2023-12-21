@@ -37,4 +37,9 @@ class ManageCartList extends ChangeNotifier {
       print(data);
     }
   }
+
+  clearCart() {
+    _cartData = [];
+    notifyListeners();
+  }
 }

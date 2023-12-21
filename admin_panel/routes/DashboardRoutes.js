@@ -62,7 +62,7 @@ export const DashboardMenu = [
 	{
 		id: uuid(),
 		title: 'Manage Bids',
-		icon: 'shopping-bag',
+		icon: 'check-circle',
 		children: [
 			{ id: uuid(), link: '/admin/bids', name: 'All Bid Products' },
 			{ id: uuid(), link: '/admin/bids/addbid', name: 'Add Bid Product' },
@@ -73,8 +73,12 @@ export const DashboardMenu = [
 	{
 		id: uuid(),
 		title: 'Orders',
-		icon: 'truck',
-		link: '/admin/orders'
+		icon: 'package',
+		children: [
+			{ id: uuid(), link: '/admin/bids', name: 'New Orders' },
+			{ id: uuid(), link: '/admin/bids/addbid', name: 'Track Orders' },
+			{ id: uuid(), link: '/admin/bids/winners', name: 'Cancel Orders' },
+		]
 	},
 	{
 		id: uuid(),
@@ -97,7 +101,7 @@ export const DashboardMenu = [
 		id: uuid(),
 		title: 'Logout',
 		icon: 'log-out',
-		link: '/'
+		link: '/logout'
 	},
 
 ];
