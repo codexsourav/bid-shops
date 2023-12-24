@@ -16,7 +16,6 @@ RUN npm install
 # Copy the entire project to the working directory
 COPY . .
 
-
 # Expose the port Next.js is running on
 EXPOSE 3000
 

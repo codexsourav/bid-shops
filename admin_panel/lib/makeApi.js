@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getStorage } from "./storage";
 
-export const apiUrl = "http://43.205.94.12:8000";
+export const apiUrl = "http://localhost:8000";
 
 export default async (path = "/", method = "GET", data = {}) => {
     var options = {

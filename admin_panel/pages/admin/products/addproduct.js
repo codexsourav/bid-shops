@@ -221,7 +221,7 @@ function AddProduct() {
                             <Form.Group as={Col} >
                                 <Form.Label>Specification</Form.Label>
                                 <Form.Control type="text"
-                                    placeholder='Ram'
+                                    placeholder='...'
                                     value={e.title}
                                     onChange={(e) => handleSpecChange(i, "title", e.target.value)}
                                 />
@@ -231,7 +231,7 @@ function AddProduct() {
                                 <Form.Label>Value</Form.Label>
                                 <InputGroup className="mb-3">
                                     <Form.Control
-                                        placeholder="120 GB"
+                                        placeholder="..."
                                         value={e.value}
                                         onChange={(e) => handleSpecChange(i, "value", e.target.value)}
                                     />
